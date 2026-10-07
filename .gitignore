@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+
+# 本机开发验证脚本（引用本机路径，暂不入库；计划改造成自包含测试）
+tests/

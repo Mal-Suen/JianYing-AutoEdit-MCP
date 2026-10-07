@@ -1,0 +1,21 @@
+[project]
+name = "jianying-autoedit-mcp"
+version = "0.1.0"
+description = "剪映自动化剪辑 | JianYing draft automation via MCP"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "pyJianYingDraft>=0.3.0",
+    "mcp>=1.2.0,<2",
+]
+
+[project.scripts]
+jianying-autoedit = "jianying_autoedit.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["jianying_autoedit"]
