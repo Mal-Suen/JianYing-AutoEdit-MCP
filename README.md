@@ -5,6 +5,7 @@
 ## 能力
 
 - 草稿管理：create_draft / open_draft / list_drafts / delete_draft / draft_summary
+  - open_draft 为模板模式：已有内容全部保留、可新增轨道（如字幕轨），暂不能向已有轨道追加片段；加密版本剪映（如 10.8）保存的草稿无法打开
 - 内容：视频、音频、文本片段；SRT 字幕一键导入（自动建轨）
 - 一键成稿：build_from_storyboard——分镜 JSON 一次生成完整草稿（视频轨＋音频轨＋字幕轨＋转场；先全量校验再构建，整数微秒时间轴无缝衔接）
 
@@ -77,12 +78,6 @@ MCP 客户端配置（以 Qwen Code / Claude Code 等 stdio 客户端为例）�
 **平台差异**：
 - Windows：全功能（草稿生成；自动导出仅剪映 ≤6）
 - Linux/macOS：草稿生成可用（Linux 需系统安装 libmediainfo，pymediainfo 依赖它），但生成的草稿仍需在 Windows 版剪映中打开导出；Mac 草稿目录自动探测待验证，可用环境变量 `JY_DRAFT_ROOT` 指定
-
-## 限制（诚实标注）
-
-1. 自动导出成片仅支持剪映 ≤6（JianyingController 硬限制）；剪映 11.1 上导出需在剪映里手动完成
-2. 打开已有草稿（open_draft）为模板模式：内容全部保留、可加新轨道内容（如字幕）；不能向已有轨道添加片段（完整再水化列为后续特性）；加密版本剪映（如 10.8）保存的草稿无法打开
-3. Mac 支持待验证
 
 ## 致谢
 
