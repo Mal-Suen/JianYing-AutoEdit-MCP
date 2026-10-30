@@ -4,7 +4,7 @@
 stdio 默认；HTTP 传输（streamable-http）规划中。
 """
 
-from typing import Optional, Union
+from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 
@@ -82,8 +82,8 @@ def add_video_segment(draft_name: str, video_path: str, track_name: str = "main"
         draft_name: 草稿名
         video_path: 视频文件绝对路径
         track_name: 目标视频轨名，默认 "main"（不存在则自动创建）
-        start: 轨道上的起始时间，"5s" 或秒数
-        duration: 占据轨道的时长（不是终点！），同一轨道时间段不可重叠
+        start: 轨道上的起始时间，"5s" 或微秒数（1 秒＝1000000）
+        duration: 占据轨道的时长（不是终点！），同一轨道时间段不可重叠；须为正
     """
     return registry.add_video(draft_name, video_path, track_name, start, duration)
 
@@ -98,8 +98,8 @@ def add_audio_segment(draft_name: str, audio_path: str, track_name: str = "voice
         draft_name: 草稿名
         audio_path: 音频文件绝对路径
         track_name: 目标音频轨名，默认 "voice"（不存在则自动创建）
-        start: 轨道上的起始时间
-        duration: 占据轨道的时长（不是终点）
+        start: 轨道上的起始时间，"5s" 或微秒数（1 秒＝1000000）
+        duration: 占据轨道的时长（不是终点）；须为正
         fade_in: 淡入时长如 "1s"，可选
         fade_out: 淡出时长如 "2s"，可选
     """
@@ -117,8 +117,8 @@ def add_text_segment(draft_name: str, text: str, track_name: str = "caption",
         draft_name: 草稿名
         text: 文本内容
         track_name: 目标文本轨名，默认 "caption"（不存在则自动创建）
-        start: 轨道上的起始时间
-        duration: 占据轨道的时长（不是终点）
+        start: 轨道上的起始时间，"5s" 或微秒数（1 秒＝1000000）
+        duration: 占据轨道的时长（不是终点）；须为正
         font: 字体名（pyJianYingDraft FontType 枚举成员名），默认 文轩体
         size: 字号，默认 5.0
         transform_y: 垂直位置，-0.8 为画面下方（字幕位），0 为居中
@@ -135,7 +135,7 @@ def import_srt(draft_name: str, srt_path: str, track_name: str = "subtitle",
         draft_name: 草稿名
         srt_path: SRT 文件绝对路径
         track_name: 字幕轨名，默认 "subtitle"
-        time_offset: 字幕整体时间偏移，"1s" 或秒数，默认 0
+        time_offset: 字幕整体时间偏移，"1s" 或微秒数（1 秒＝1000000），默认 0
     """
     return registry.import_srt(draft_name, srt_path, track_name, time_offset)
 
@@ -146,11 +146,12 @@ def build_from_storyboard(draft_name: str, shots: list, width: int = 1920, heigh
     """从分镜脚本一键生成完整草稿（视频轨＋音频轨＋字幕轨＋转场）——分镜 JSON 一步成稿。
 
     每个镜（shots 列表元素）的字段：
-    - duration（必需）：镜头时长，"5s" 或秒数
+    - duration（必需）：镜头时长，"5s" 或微秒数（1 秒＝1000000）
     - video（必需）：画面素材绝对路径（素材时长须不小于镜头时长）
     - audio（可选）：旁白音频绝对路径（按自然时长放置，须不超过镜头时长）
     - caption（可选）：本镜字幕文本
-    - transition（可选）：转场名（加在本镜末尾衔接下一镜，如 "信号故障"）
+    - transition（可选）：转场名（加在本镜末尾衔接下一镜，如 "信号故障"；
+      最后一镜的 transition 会被忽略——转场需要下一镜才有意义）
 
     先全量校验再构建：任一镜的素材缺失/时长越界/转场名错误都会在建稿前报错。
     镜头按顺序首尾相接（整数微秒累加，无舍入缝隙）。
