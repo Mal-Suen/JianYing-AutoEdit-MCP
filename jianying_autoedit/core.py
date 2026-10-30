@@ -166,9 +166,13 @@ class DraftRegistry:
             except Exception:
                 if had_main and os.path.exists(bak):
                     shutil.copy2(bak, path)
+                    raise ValueError(
+                        f"草稿 '{name}' 保存后校验失败（draft_content.json 不可解析），"
+                        f"已从备份恢复；请重试或检查磁盘状态"
+                    )
                 raise ValueError(
-                    f"草稿 '{name}' 保存后校验失败（draft_content.json 不可解析），"
-                    f"已从备份恢复；请重试或检查磁盘状态"
+                    f"草稿 '{name}' 保存后校验失败（draft_content.json 不可解析）；"
+                    f"请重试或检查磁盘状态"
                 )
         if had_main and os.path.exists(bak):
             try:
